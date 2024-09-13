@@ -2,21 +2,15 @@ import React, { useState } from 'react';
 import TodoForm from '../components/Todo/TodoForm';
 import TodoList from '../components/Todo/TodoList';
 import Navbar from '../navbar/Navbar';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 
 const TodoPage = () => {
   const [todos, setTodos] = useState([]);
-  const [editTodo, setEditTodo] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedTodo, setSelectedTodo] = useState(null);
 
   const handleAddTodo = (newTodo) => {
-    if (editTodo) {
-      setTodos(todos.map(todo =>
-        todo.id === newTodo.id ? newTodo : todo
-      ));
-      setEditTodo(null);
-    } else {
-      setTodos([...todos, { ...newTodo, id: Date.now(), completed: false }]);
-    }
+    setTodos([...todos, { ...newTodo, id: Date.now(), completed: false }]);
   };
 
   const handleToggleComplete = (id) => {
@@ -27,10 +21,29 @@ const TodoPage = () => {
 
   const handleDeleteTodo = (id) => {
     setTodos(todos.filter(todo => todo.id !== id));
+    setOpenDialog(false); // Close the dialog after deletion
   };
 
-  const handleUpdateTodo = (todo) => {
-    setEditTodo(todo);
+  const handleOpenDialog = (todo) => {
+    setSelectedTodo(todo);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedTodo(null);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedTodo) {
+      handleDeleteTodo(selectedTodo.id);
+    }
+  };
+
+  const handleUpdateTodo = (updatedTodo) => {
+    setTodos(todos.map(todo =>
+      todo.id === updatedTodo.id ? updatedTodo : todo
+    ));
   };
 
   return (
@@ -38,19 +51,34 @@ const TodoPage = () => {
       <Navbar />
       <Container>
         <Box sx={{ mt: 4 }}>
-          
-          <TodoForm
-            onAddTodo={handleAddTodo}
-            editTodo={editTodo}
-            setEditTodo={setEditTodo}
-          />
+          <Typography variant="h4" gutterBottom>Create a Todo Item</Typography>
+          <TodoForm onAddTodo={handleAddTodo} />
           <TodoList
             todos={todos}
             onToggleComplete={handleToggleComplete}
-            onDelete={handleDeleteTodo}
-            onEdit={handleUpdateTodo}
+            onDelete={handleOpenDialog} // Pass the handler to open dialog
+            onUpdate={handleUpdateTodo}
           />
         </Box>
+
+        {/* Confirmation Dialog */}
+        <Dialog
+          open={openDialog}
+          onClose={handleCloseDialog}
+        >
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <Typography>Are you sure you want to delete the todo item "{selectedTodo?.title}"?</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmDelete} color="error">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </>
   );

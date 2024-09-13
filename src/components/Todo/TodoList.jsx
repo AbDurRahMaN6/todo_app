@@ -4,13 +4,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { green, grey, yellow } from '@mui/material/colors';
 
-const TodoList = ({ todos, onToggleComplete, onDelete, onEdit }) => {
+const TodoList = ({ todos, onToggleComplete, onDelete, onUpdate }) => {
   return (
-    <div>
-      <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-      All Thing List
-      </Typography>
-      <TableContainer component={Paper} sx={{ mt: 2 }}>
+    <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
@@ -41,14 +37,14 @@ const TodoList = ({ todos, onToggleComplete, onDelete, onEdit }) => {
               <TableCell>
                 <IconButton
                   color="success"
-                  onClick={() => onEdit(todo)}
+                  onClick={() => onUpdate(todo)}
                   disabled={todo.completed}
                 >
                   <EditIcon />
                 </IconButton>
                 <IconButton
                   color="error"
-                  onClick={() => onDelete(todo.id)}
+                  onClick={() => onDelete(todo)} // Pass the todo to the onDelete function
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -58,7 +54,6 @@ const TodoList = ({ todos, onToggleComplete, onDelete, onEdit }) => {
         </TableBody>
       </Table>
     </TableContainer>
-    </div>
   );
 };
 
