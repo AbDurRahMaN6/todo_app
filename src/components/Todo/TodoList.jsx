@@ -44,7 +44,7 @@ const TodoList = ({ todos, onToggleComplete, onDelete, onUpdate }) => {
                 </IconButton>
                 <IconButton
                   color="error"
-                  onClick={() => onDelete(todo)} // Pass the todo to the onDelete function
+                  onClick={() => onDelete(todo)}
                 >
                   <DeleteIcon />
                 </IconButton>

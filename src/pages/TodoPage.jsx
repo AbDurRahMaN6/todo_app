@@ -21,7 +21,7 @@ const TodoPage = () => {
 
   const handleDeleteTodo = (id) => {
     setTodos(todos.filter(todo => todo.id !== id));
-    setOpenDialog(false); // Close the dialog after deletion
+    setOpenDialog(false);
   };
 
   const handleOpenDialog = (todo) => {
@@ -56,12 +56,12 @@ const TodoPage = () => {
           <TodoList
             todos={todos}
             onToggleComplete={handleToggleComplete}
-            onDelete={handleOpenDialog} // Pass the handler to open dialog
+            onDelete={handleOpenDialog} 
             onUpdate={handleUpdateTodo}
           />
         </Box>
 
-        {/* Confirmation Dialog */}
+        
         <Dialog
           open={openDialog}
           onClose={handleCloseDialog}
